@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大学生竞赛资讯日报</title>
+<meta name="description" content="每天 9:00 更新的大学生竞赛资讯：报名提醒、赛程动态、结果公示、保研政策。">
+<style>
+/* 布局：深紫页头（标题 + 更新时间）→ 筛选条 → 资讯列表 + 右侧本月节点 */
+:root{
+  --side-1:#1a1430; --side-2:#2b1d55; --accent:#7b5cff; --accent-2:#a97bff; --accent-soft:#efeaff;
+  --bg:#f5f6fa; --card:#fff; --ink:#1f2235; --muted:#6f7590; --line:#e6e8f0;
+  --ok:#18a058; --ok-soft:#e7f7ee; --warn:#d9480f; --warn-soft:#fff1e8;
+  --font:"PingFang SC","Microsoft YaHei","Noto Sans SC","Hiragino Sans GB",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.7}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+header{background:linear-gradient(135deg,var(--side-2),var(--side-1));color:#fff;padding:28px 16px 22px}
+.wrap{max-width:1080px;margin:0 auto}
+header h1{margin:0;font-size:26px;letter-spacing:.02em;text-wrap:balance}
+header p{margin:4px 0 0;color:#c9c2e6;font-size:14px}
+.upd{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,.1);border-radius:999px;padding:3px 12px;font-size:13px}
+.upd i{width:8px;height:8px;border-radius:50%;background:#3ad17a;display:inline-block}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 14px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer;font:inherit;font-size:13px}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.bar input{flex:1;min-width:180px;max-width:280px;margin-left:auto;font:inherit;font-size:14px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink)}
+.layout{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start;padding:0 16px 40px}
+@media (max-width:860px){.layout{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:12px}
+.item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px}
+.item.t-结果公示{border-left-color:var(--ok)}
+.item.t-报名提醒{border-left-color:var(--warn)}
+.item h2{margin:6px 0 6px;font-size:16px;line-height:1.5;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);align-items:center}
+.pill{padding:0 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+.pill.t-结果公示{background:var(--ok-soft);color:var(--ok)}
+.pill.t-报名提醒{background:var(--warn-soft);color:var(--warn)}
+.item p{margin:0;font-size:14px;color:#3b3f55}
+.src{margin-top:8px;font-size:12px;color:var(--muted)}
+.new{background:#e5484d;color:#fff;border-radius:4px;padding:0 6px}
+aside .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+aside h3{margin:0 0 8px;font-size:15px}
+aside ul{margin:0;padding-left:18px;font-size:13px;color:var(--muted)}
+aside li b{color:var(--ink);font-weight:500}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>大学生竞赛资讯日报</h1>
+  <p>报名提醒 · 赛程动态 · 结果公示 · 保研政策，每天 9:00 更新</p>
+  <span class="upd"><i></i>最近更新：<span id="upd">加载中</span></span>
+</div></header>
+
+<div class="wrap" style="padding:0 16px">
+  <div class="bar" id="bar">
+    <button class="tab on" data-t="全部">全部</button>
+    <button class="tab" data-t="报名提醒">报名提醒</button>
+    <button class="tab" data-t="赛程动态">赛程动态</button>
+    <button class="tab" data-t="结果公示">结果公示</button>
+    <button class="tab" data-t="保研政策">保研政策</button>
+    <input type="search" id="q" placeholder="搜索竞赛名称" aria-label="搜索竞赛名称">
+  </div>
+</div>
+
+<div class="wrap layout">
+  <main class="list" id="list"><div class="empty">正在加载资讯……</div></main>
+  <aside>
+    <div class="card"><h3 id="monTitle">本月竞赛节点</h3><ul id="mon"></ul><p style="font-size:12px;color:var(--muted);margin:8px 0 0">按往年规律整理，以官方当年通知为准。</p></div>
+    <div class="card"><h3>说明</h3><p style="margin:0;font-size:13px;color:var(--muted)">资讯整理自竞赛官网、教育主管部门、高校教务处及权威媒体，每条都附原文链接。报名和参赛请以官方通知为准。</p></div>
+  </aside>
+</div>
+<footer>大学生竞赛资讯日报 · 信息仅供参考，以各竞赛官方发布为准</footer>
+
+<script>
+const NODES={1:["美赛 · 比赛（1月底）","智能车 · 发布规则"],2:["美赛 · 比赛收尾","挑战杯 · 校赛启动"],3:["创新大赛 · 校赛","计算机设计大赛 · 校赛","大广赛 · 发布命题","NECCS 英语竞赛 · 报名"],4:["蓝桥杯 · 省赛","正大杯 · 省赛","数学竞赛 · 决赛","挑战杯 · 校赛"],5:["正大杯 · 国赛","挑战杯 · 省赛","美赛 · 公布结果","计算机设计大赛 · 省赛"],6:["蓝桥杯 · 国赛","创新大赛 · 省赛","大广赛 · 作品提交"],7:["电赛 · 全国赛（奇数年）","三创赛 · 国赛","计算机设计大赛 · 国赛"],8:["智能车 · 总决赛","节能减排 · 决赛","数模 · 赛前冲刺"],9:["数学建模国赛 · 比赛","数学竞赛 · 报名","国才杯 · 校赛"],10:["蓝桥杯 · 开放报名","正大杯 · 报名","创新大赛 · 总决赛","ICPC · 区域赛"],11:["数学竞赛 · 预赛","数模国赛 · 公布获奖","挑战杯 · 全国决赛","美赛 · 开放报名"],12:["美赛 · 报名组队","国才杯 · 全国决赛","ICPC · 区域赛"]};
+const m=new Date().getMonth()+1;
+document.getElementById("monTitle").textContent=m+" 月竞赛节点";
+document.getElementById("mon").innerHTML=NODES[m].map(s=>{const[a,b]=s.split(" · ");return`<li><b>${a}</b> · ${b}</li>`}).join("");
+const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let DATA=[],type="全部";
+function draw(){
+  const q=document.getElementById("q").value.trim();
+  const l=DATA.filter(x=>(type==="全部"||x.type===type)&&(!q||(x.comp+x.title).includes(q)));
+  const now=Date.now();
+  document.getElementById("list").innerHTML=l.length?l.map(x=>{
+    const fresh=x.added&&now-new Date(x.added).getTime()<36e5*36;
+    return`<article class="item t-${esc(x.type)}"><div class="meta"><span class="pill t-${esc(x.type)}">${esc(x.type)}</span><span>${esc(x.comp)}</span><span>${esc(x.date)}</span>${fresh?'<span class="new">新</span>':""}${x.deadline?`<span style="color:var(--warn)">截止：${esc(x.deadline)}</span>`:""}</div>
+    <h2>${esc(x.title)}</h2><p>${esc(x.summary)}</p>
+    <div class="src">来源：${esc(x.source)}${x.url?` · <a href="${esc(x.url)}" target="_blank" rel="noopener">查看原文</a>`:""}</div></article>`;}).join(""):`<div class="empty">这个分类下暂时没有资讯。</div>`;
+}
+document.getElementById("bar").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{type=b.dataset.t;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));draw();});
+document.getElementById("q").oninput=draw;
+fetch("data/news.json?v="+Date.now()).then(r=>r.json()).then(d=>{
+  document.getElementById("upd").textContent=d.updated;
+  DATA=(d.items||[]).sort((a,b)=>(b.added||b.date).localeCompare(a.added||a.date));
+  draw();
+}).catch(()=>{document.getElementById("list").innerHTML='<div class="empty">资讯加载失败，请刷新重试。</div>';document.getElementById("upd").textContent="—";});
+</script>
+</body>
+</html>
