@@ -1,6 +1,14 @@
 (function () {
   'use strict';
-  var S = { cfg: {}, contests: [], news: [], svc: {}, cases: [], updated: '' };
+  var S = { cfg: {}, contests: [], news: [], svc: {}, cases: [], updated: '', archive: null };
+  var archLoading = false;
+  function loadArchive() {
+    if (archLoading) return; archLoading = true;
+    fetch('archive/index.json?v=' + Math.floor(Date.now() / 600000), { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : { days: [] }; })
+      .catch(function () { return { days: [] }; })
+      .then(function (j) { S.archive = j; if (/^#\/?archive/.test(location.hash)) app.innerHTML = archive(); });
+  }
   var F = { cat: '全部', st: '全部' };
   var app = document.getElementById('app');
 
@@ -149,6 +157,31 @@
       csHtml + '<section class="sec">' + contactBlock() + '</section>';
   }
 
+  function archive() {
+    var A = S.archive;
+    if (A === null) return '<div class="loading">正在加载存档…</div>';
+    if (!A || !A.days || !A.days.length) return '<section class="sec"><div class="sec-h"><h2>往期存档</h2></div><div class="card empty">暂无存档</div></section>';
+    var html = A.days.map(function (d) {
+      var nw = (d.news || []).map(function (n) {
+        return '<li><span class="tag t-' + esc(n.type) + '">' + esc(n.type || '通知') + '</span> ' + (n.url ? '<a href="' + esc(safeUrl(n.url)) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>' : esc(n.title)) + '</li>';
+      }).join('');
+      var ar = (d.articles || []).map(function (a) {
+        return '<li><span class="tag">' + esc(a.kicker || '推文') + '</span> <a href="posts/#/a/' + encodeURIComponent(a.id) + '">' + esc(a.title) + '</a></li>';
+      }).join('');
+      var ct = (d.contests || []).map(function (c) {
+        return '<a class="chip" style="text-decoration:none" href="#/contest/' + esc(c.id) + '">' + esc(c.change) + '｜' + esc(c.name) + '</a>';
+      }).join(' ');
+      var base = 'archive/' + encodeURIComponent(d.date) + '/';
+      return '<div class="card block" style="margin-bottom:14px"><h2>' + esc(fmt(d.date)) + '</h2>' +
+        (nw ? '<p class="src" style="margin:0 0 4px">新增通知 ' + d.news.length + ' 条</p><ul class="arc">' + nw + '</ul>' : '') +
+        (ar ? '<p class="src" style="margin:10px 0 4px">新增推文 ' + d.articles.length + ' 篇</p><ul class="arc">' + ar + '</ul>' : '') +
+        (ct ? '<p class="src" style="margin:10px 0 6px">赛事变动 ' + d.contests.length + ' 项</p><div class="chips">' + ct + '</div>' : '') +
+        (!nw && !ar && !ct ? '<p class="muted" style="margin:0">当日核对完毕，无新增内容。</p>' : '') +
+        '<p class="src" style="margin:12px 0 0">当日完整数据：<a href="' + base + 'contests.json" target="_blank">赛事</a> · <a href="' + base + 'news.json" target="_blank">通知</a> · <a href="' + base + 'articles.json" target="_blank">推文</a></p></div>';
+    }).join('');
+    return '<section class="sec"><div class="sec-h"><h2>往期存档</h2><span class="muted" style="font-size:13px">每日自动存档，共 ' + A.days.length + ' 天</span></div>' + html + '</section>';
+  }
+
   function about() {
     return '<section class="sec"><div class="sec-h"><h2>关于本站</h2></div><div class="card prose">' +
       '<h2>本站做什么</h2><p>' + esc(S.cfg.about) + '</p>' +
@@ -168,6 +201,7 @@
     else if (r === 'news') html = news();
     else if (r === 'services') html = services();
     else if (r === 'about') html = about();
+    else if (r === 'archive') { html = archive(); if (S.archive === null) loadArchive(); }
     else { r = 'home'; html = home(); }
     app.innerHTML = html;
     var nr = r === 'contest' ? 'contests' : r;

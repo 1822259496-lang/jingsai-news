@@ -1,0 +1,204 @@
+{
+  "updated": "2026-11-22",
+  "days": [
+    {
+      "date": "2026-11-22",
+      "news": [
+        {
+          "id": "n20261121-digix-intl",
+          "date": "2026-11-21",
+          "type": "赛程",
+          "title": "算法精英大赛国际赛区报名及作品提交截止延至 12 月 10 日",
+          "url": "https://www.aicomp.cn/notice/notice-1/6000.html"
+        },
+        {
+          "id": "n20261120-zhengda",
+          "date": "2026-11-20",
+          "type": "赛程",
+          "title": "正大杯第十七届本科组知识赛按安排于 11 月 20 日结束",
+          "url": "https://som.bit.edu.cn/gbjxxm/bksjx/xxtgbks/d235dd71b1e84ce291ede2870bac61f4.htm"
+        },
+        {
+          "id": "n20261119-mcm",
+          "date": "2026-11-19",
+          "type": "赛程",
+          "title": "2027 年美赛赛程公布：北京时间 1 月 29 日 6:00 开赛",
+          "url": "https://borderless.so/extracurricular-programs/comap/mcm-icm"
+        },
+        {
+          "id": "n20261118-lanqiao",
+          "date": "2026-11-18",
+          "type": "报名",
+          "title": "第十八届蓝桥杯软件赛等赛项 12 月 18 日 14:00 截止报名",
+          "url": "https://www.scuec.edu.cn/jky/info/1167/5995.htm"
+        },
+        {
+          "id": "n20261118-cumcm",
+          "date": "2026-11-18",
+          "type": "结果",
+          "title": "2026 高教社杯全国大学生数学建模竞赛获奖名单公布",
+          "url": "https://www.mcm.edu.cn/html_cn/node/0678faa184c4090234e8e52e769b3358.html"
+        },
+        {
+          "id": "n20261117-digix",
+          "date": "2026-11-17",
+          "type": "结果",
+          "title": "算法精英大赛算法创新赛、算法应用赛（赛区制）区域赛获奖名单公布",
+          "url": "https://www.aicomp.cn/notice/notice-1/5960.html"
+        },
+        {
+          "id": "n20261117-nengjing",
+          "date": "2026-11-17",
+          "type": "报名",
+          "title": "第十三届全国大学生能源经济学术创意大赛开放报名，12 月 16 日截止",
+          "url": "https://mse.cufe.edu.cn/info/1073/13106.htm"
+        },
+        {
+          "id": "n20261115-digix-final",
+          "date": "2026-11-15",
+          "type": "赛程",
+          "title": "算法创新赛总决赛定于 12 月 4 日至 6 日在东南大学举行",
+          "url": "https://www.aicomp.cn/notice/notice-1/5866.html"
+        },
+        {
+          "id": "n20261010-lanqiao",
+          "date": "2026-10-10",
+          "type": "报名",
+          "title": "第十八届蓝桥杯大赛报名启动，新增 AI 模型应用开发赛项",
+          "url": "https://www.news.cn/digital/20261010/bdd855071e0c4ab2ae3586fdadf4ab42/c.html"
+        },
+        {
+          "id": "n20260731-cicd",
+          "date": "2026-07-31",
+          "type": "通知",
+          "title": "教育部发布中国国际大学生创新大赛（2026）通知",
+          "url": "https://www.eol.cn/zhengce/wenjian/202607/t20260731_2761810.shtml"
+        },
+        {
+          "id": "n20260620-nengjing",
+          "date": "2026-06-20",
+          "type": "结果",
+          "title": "第十二届全国大学生能源经济学术创意大赛总决赛落幕",
+          "url": "https://m.thepaper.cn/newsDetail_forward_33422003"
+        }
+      ],
+      "articles": [
+        {
+          "id": "a20261122-digix",
+          "date": "2026-11-22",
+          "kicker": "赛程速递",
+          "title": "算法创新赛总决赛 12 月 4 日至 6 日在东南大学举行"
+        },
+        {
+          "id": "a20261121-digix",
+          "date": "2026-11-21",
+          "kicker": "结果公示",
+          "title": "算法精英大赛获奖名单陆续公布，公示期内可提异议"
+        },
+        {
+          "id": "a20261121-cumcm",
+          "date": "2026-11-21",
+          "kicker": "结果公示",
+          "title": "2026 数模国赛获奖名单公布，明年竞赛 9 月举行"
+        },
+        {
+          "id": "a20261120-nengjing13",
+          "date": "2026-11-20",
+          "kicker": "报名提醒",
+          "title": "第十三届能源经济学术创意大赛开始报名，12 月 16 日截止"
+        },
+        {
+          "id": "a20261119-mcm2027",
+          "date": "2026-11-19",
+          "kicker": "赛程速递",
+          "title": "2027 美赛时间确定：北京时间 1 月 29 日 6:00 开赛"
+        },
+        {
+          "id": "a20261119-lanqiao18",
+          "date": "2026-11-19",
+          "kicker": "报名提醒",
+          "title": "第十八届蓝桥杯正在报名，今年新增 AI 模型应用开发赛项"
+        },
+        {
+          "id": "a20261119-tzb2027",
+          "date": "2026-11-19",
+          "kicker": "备赛指南",
+          "title": "2027 年“大挑”备赛：校内选拔前要弄清的几件事"
+        },
+        {
+          "id": "a20261119-week47",
+          "date": "2026-11-19",
+          "kicker": "每周日历",
+          "title": "竞赛日历 | 11 月下旬，这些比赛值得关注"
+        }
+      ],
+      "contests": [
+        {
+          "id": "cicd2026",
+          "name": "中国国际大学生创新大赛（2026）",
+          "change": "收录",
+          "status": "进行中"
+        },
+        {
+          "id": "lanqiao18",
+          "name": "第十八届蓝桥杯全国大学生软件和信息技术大赛",
+          "change": "收录",
+          "status": "报名中"
+        },
+        {
+          "id": "mcm2027",
+          "name": "2027 年美国（国际）大学生数学建模竞赛（MCM/ICM）",
+          "change": "收录",
+          "status": "即将开始"
+        },
+        {
+          "id": "tiaozhan-dt-20",
+          "name": "第二十届“挑战杯”全国大学生课外学术科技作品竞赛",
+          "change": "收录",
+          "status": "校内选拔"
+        },
+        {
+          "id": "zhengda17",
+          "name": "“正大杯”第十七届全国大学生市场调查与分析大赛",
+          "change": "收录",
+          "status": "进行中"
+        },
+        {
+          "id": "nengjing13",
+          "name": "第十三届全国大学生能源经济学术创意大赛",
+          "change": "收录",
+          "status": "报名中"
+        },
+        {
+          "id": "digix",
+          "name": "第八届全球校园人工智能算法精英大赛",
+          "change": "收录",
+          "status": "进行中"
+        },
+        {
+          "id": "tjjm2027",
+          "name": "2027 年全国大学生统计建模大赛",
+          "change": "收录",
+          "status": "待通知"
+        },
+        {
+          "id": "cumcm2027",
+          "name": "2027 年全国大学生数学建模竞赛",
+          "change": "收录",
+          "status": "待通知"
+        },
+        {
+          "id": "fwwb18",
+          "name": "第十八届中国大学生服务外包创新创业大赛",
+          "change": "收录",
+          "status": "待通知"
+        }
+      ],
+      "counts": {
+        "contests": 10,
+        "news": 11,
+        "articles": 8
+      }
+    }
+  ]
+}
