@@ -139,6 +139,11 @@ canvas#cv{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;
         <p id="aiMsg" role="status"></p>
       </div>
     </details>
+    <div id="dailyBox" hidden>
+      <h2>今日稿件 <small id="dailyDate" style="font-weight:400;color:#8a93a0"></small></h2>
+      <p style="margin:0 0 6px;font-size:12.5px;color:#8a93a0">每天 9:00 前根据官方通知自动生成，导入后可修改再复制到公众号。</p>
+      <div class="drafts" id="dailyList"></div>
+    </div>
     <h2>我的稿件</h2>
     <div class="drafts" id="drafts"></div>
   </aside>
@@ -804,8 +809,57 @@ $("#cvSave").addEventListener("click", () => {
   }, "image/png");
 });
 
+/* ---------- 今日稿件（data/daily.json，每日自动更新） ---------- */
+let DAILY = [];
+function dailyTpl(a){ const k = (a.kicker || "") + (a.category || ""); return /结果|名单/.test(k) ? "list" : /指南|攻略|解读/.test(k) ? "guide" : "notice"; }
+function articleToDraft(a){
+  const s = v => (v == null ? "" : String(v)), tpl = dailyTpl(a);
+  const B = []; let n = 0;
+  B.push(b("hero",{kicker:s(a.kicker) || s(a.category), title:s(a.title), sub:s(a.category), foot:s(a.date)}));
+  (a.blocks || []).forEach(x => {
+    if (!x || !x.type) return;
+    if (x.type === "p") B.push(b("para",{text:s(x.text)}));
+    else if (x.type === "h"){ n++; B.push(b("section",{label:(n < 10 ? "0" : "") + n, title:s(x.text)})); }
+    else if (x.type === "callout") B.push(b("callout",{title:s(x.title), text:s(x.text)}));
+    else if (x.type === "timeline") B.push(b("timeline",{kicker:s(a.kicker), title:"关键时间，一次看清", strip:"", rows:(x.items || []).map(i => s(i.date) + " | " + s(i.label) + " | ").join("\n"), foot:"来源：官方通知｜【账号名】整理", cap:""}));
+    else if (x.type === "table") B.push(b("table",{head:(x.head || []).map(s).join(" | "), rows:(x.rows || []).map(r => (r || []).map(s).join(" | ")).join("\n")}));
+    else if (x.type === "list") B.push(b("para",{text:(x.items || []).map(i => "▪ " + s(i)).join("\n")}));
+    else if (x.type === "source") B.push(b("source",{text:"来源：" + (x.items || []).map(i => s(i.title) + (i.url ? "（" + s(i.url) + "）" : "")).join("；") + "。核对日期：" + s(a.date) + "。"}));
+  });
+  B.push(b("cta",{name:"备赛资料包", items:"官方通知原文、时间节点表", kw:s(a.kicker) || "资料", extra:""}));
+  B.push(b("sign"));
+  return {id:"daily-" + s(a.id), from:s(a.id), tpl, theme:a.theme || TPL[tpl].theme, title:s(a.title), blocks:B, updatedAt:Date.now(), example:false};
+}
+function renderDaily(){
+  if (!DAILY.length){ $("#dailyBox").hidden = true; return; }
+  $("#dailyBox").hidden = false;
+  $("#dailyList").innerHTML = DAILY.map(a => {
+    const has = S.drafts.some(d => d.id === "daily-" + a.id);
+    return '<div class="draft"><b>' + esc(a.title) + '</b><div class="meta"><span><span class="tag">' + esc(a.kicker || a.category || "") + '</span> ' + esc(a.date || "") + '</span>' +
+      '<button type="button" class="btn small' + (has ? " ghost" : "") + '" data-daily="' + esc(a.id) + '">' + (has ? "打开" : "导入") + '</button></div></div>';
+  }).join("");
+}
+$("#dailyList").addEventListener("click", e => {
+  const t = e.target.closest("[data-daily]"); if (!t) return;
+  const id = t.getAttribute("data-daily"), did = "daily-" + id;
+  if (!S.drafts.some(d => d.id === did)){
+    const a = DAILY.find(x => x.id === id); if (!a) return;
+    S.drafts = S.drafts.filter(x => !x.example); S.drafts.push(articleToDraft(a));
+    S.cur = did; S.sel = null; renderAll(); touch(); toast("已导入，可以修改后复制到公众号");
+  } else { S.cur = did; S.sel = null; renderAll(); }
+  renderDaily();
+});
+function loadDaily(){
+  fetch("data/daily.json?v=" + Math.floor(Date.now() / 600000), {cache:"no-cache"}).then(r => r.ok ? r.json() : null).then(j => {
+    const items = (j && Array.isArray(j.items)) ? j.items : [];
+    DAILY = items.filter(a => a && a.id && a.date).sort((x, y) => (x.date < y.date ? 1 : x.date > y.date ? -1 : 0)).slice(0, 10);
+    $("#dailyDate").textContent = j && j.updated ? "更新于 " + j.updated : "";
+    renderDaily();
+  }).catch(() => {});
+}
+
 /* ---------- 启动 ---------- */
-renderNew(); renderAll(); setCloud("wait"); initCaps();
+renderNew(); renderAll(); setCloud("wait"); initCaps(); loadDaily();
 </script>
 </body>
 </html>
