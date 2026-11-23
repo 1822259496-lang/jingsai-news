@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>竞赛引流工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* 布局：左侧深紫侧边栏（头像 + 分组菜单 + 版本状态），右侧白色内容卡（页头图标 + 标题 + 统计 + 标签 + 内容） */
+:root{
+  --side-1:#1a1430; --side-2:#2b1d55; --side-ink:#c9c2e6; --side-dim:#8d84b3;
+  --accent:#7b5cff; --accent-2:#a97bff; --accent-soft:#efeaff;
+  --bg:#f5f6fa; --card:#ffffff; --ink:#1f2235; --muted:#7a8098; --line:#e6e8f0;
+  --ok:#18a058; --ok-soft:#e7f7ee; --warn:#d9480f; --warn-soft:#fff1e8;
+  --font:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);font-size:14px;line-height:1.6;color:var(--ink);background:var(--side-1)}
+button,select,input,textarea{font:inherit}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100%}
+/* 侧边栏 */
+aside{background:linear-gradient(180deg,var(--side-2),var(--side-1) 70%);color:var(--side-ink);display:flex;flex-direction:column;gap:14px;padding:22px 12px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.me{display:flex;flex-direction:column;align-items:center;gap:6px}
+.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#ff8fb1,var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;border:3px solid rgba(255,255,255,.18);position:relative}
+.avatar::after{content:"";position:absolute;right:2px;bottom:2px;width:11px;height:11px;border-radius:50%;background:#3ad17a;border:2px solid var(--side-2)}
+.me b{color:#fff;font-size:14px}
+.me small{color:var(--side-dim);font-size:12px}
+.group{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:8px 6px}
+.group-h{display:flex;align-items:center;gap:6px;color:#fff;font-weight:700;font-size:13px;padding:4px 8px 6px}
+.menu a{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;color:var(--side-ink);text-decoration:none;font-size:13px}
+.menu a:hover{background:rgba(255,255,255,.06)}
+.menu a.on{background:linear-gradient(90deg,var(--accent),#6a4ae0);color:#fff;font-weight:700}
+.menu svg,.group-h svg{width:15px;height:15px;flex:none}
+.ver{margin-top:auto;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border-radius:10px;padding:9px 10px;font-size:12px}
+.ver .shield{width:28px;height:28px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.ver .shield svg{width:15px;height:15px}
+.ver dl{margin:0;display:grid;grid-template-columns:auto auto;gap:0 14px;flex:1}
+.ver dt{color:var(--side-dim)} .ver dd{margin:0;text-align:right;color:#fff;font-weight:700}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;background:#3ad17a}
+.dot.off{background:#f0a35a}
+/* 主区域 */
+main{background:var(--bg);border-radius:14px 0 0 0;margin-top:10px;min-width:0;display:flex;flex-direction:column}
+.page{display:none;flex-direction:column;min-height:100%}
+.page.on{display:flex}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--card);padding:16px 24px;border-bottom:1px solid var(--line);border-radius:14px 0 0 0}
+.ph-l{display:flex;align-items:center;gap:12px}
+.ph-ic{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:grid;place-items:center;color:#fff}
+.ph-ic svg{width:19px;height:19px}
+.ph h1{margin:0;font-size:17px;line-height:1.3}
+.ph p{margin:0;font-size:12px;color:var(--muted)}
+.stats{display:flex;gap:22px}
+.stat{text-align:center}
+.stat b{display:block;color:var(--accent);font-size:19px;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:11px;color:var(--muted)}
+.body{padding:18px 24px 80px;flex:1}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.btn{border:0;border-radius:999px;padding:7px 16px;cursor:pointer;background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#fff;font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.line{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:4px 11px;font-size:12px}
+.btn.green{background:var(--ok)} .btn.red{background:#e5484d}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:5px 14px;cursor:pointer;font-size:13px}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.split{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+@media (max-width:980px){.split{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h2{margin:0 0 12px;font-size:15px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+select,input[type=text],textarea{color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+textarea{resize:vertical;min-height:110px}
+.seg{display:flex;gap:6px}
+/* 空状态（参照截图） */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:50px 16px;gap:10px;color:var(--muted)}
+.empty .big{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:grid;place-items:center;color:#fff;box-shadow:0 8px 20px rgba(123,92,255,.25)}
+.empty .big svg{width:28px;height:28px}
+.empty strong{color:var(--ink);font-size:15px}
+.empty p{margin:0;max-width:420px;font-size:13px}
+.feats{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:8px 40px;margin-top:14px;font-size:12px;text-align:left}
+.feats span{display:flex;align-items:center;gap:7px;color:var(--muted)}
+.feats svg{width:14px;height:14px;color:var(--accent)}
+/* 结果 */
+.stream{white-space:pre-wrap;font-size:14px}
+.sec{border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.sec-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg);border-bottom:1px solid var(--line);font-weight:700;font-size:13px}
+.sec-b{padding:10px 12px;white-space:pre-wrap;font-size:14px}
+mark{background:var(--warn-soft);color:var(--warn);border-bottom:2px solid var(--warn);padding:0 2px}
+.check{border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:13px}
+.check.good{background:var(--ok-soft);color:var(--ok)}
+.check.bad{background:var(--warn-soft);color:var(--warn)}
+/* 列表行（参照截图里的智能体卡片） */
+.rows{display:flex;flex-direction:column;gap:12px}
+.rowc{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px}
+.rowc.done{border-left-color:var(--ok)}
+.rowc .ic{width:46px;height:38px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:11px;white-space:nowrap}
+.ic.xhs{background:#ff2e4d} .ic.dy{background:#111}
+.rowc h4{margin:0;font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.pill{font-size:11px;padding:1px 8px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.wait{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:700px){.rowc{grid-template-columns:auto 1fr}.acts{grid-column:1/-1;justify-content:flex-start}}
+/* 资料库与日历 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.comp{display:flex;flex-direction:column;gap:8px}
+.comp h4{margin:0;font-size:15px;line-height:1.4}
+.tl{display:flex;flex-direction:column;gap:2px;font-size:13px;border-left:2px solid var(--accent-soft);padding-left:10px}
+.tl b{display:inline-block;min-width:58px;color:var(--accent);font-variant-numeric:tabular-nums}
+.comp p{margin:0;font-size:13px;color:var(--muted)}
+.comp .btn{align-self:flex-start;margin-top:auto}
+.mon{display:flex;flex-direction:column;gap:7px}
+.mon.now{border:2px solid var(--accent)}
+.mon-h{display:flex;justify-content:space-between;align-items:center}
+.mon-h strong{font-size:20px;font-variant-numeric:tabular-nums}
+.mon ul{margin:0;padding-left:18px;font-size:12px;color:var(--muted)}
+.mon .btn{align-self:flex-start;margin-top:auto}
+/* 帮助与弹窗 */
+.help{position:fixed;right:22px;bottom:22px;z-index:20;box-shadow:0 6px 18px rgba(123,92,255,.35)}
+.modal{position:fixed;inset:0;background:rgba(20,16,40,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
+.modal.on{display:flex}
+.modal .card{max-width:720px;width:100%;max-height:86vh;overflow:auto}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.modal-h h2{margin:0}
+.notice{font-size:12px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:7px 12px;margin-bottom:14px}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;flex-direction:column}
+  .me{flex-direction:row;justify-content:center}
+  main{border-radius:0;margin-top:0}
+  .ph{border-radius:0}
+  .stats{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="me"><div class="avatar" aria-hidden="true">竞</div><div style="text-align:center"><b>竞赛引流工作台</b><br><small>小红书 · 抖音 → 微信</small><br><small><a href="../" style="color:#c9c2e6">查看资讯日报 →</a></small></div></div>
+  <div class="group">
+    <div class="group-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>公域引流</div>
+    <nav class="menu" id="menu1"></nav>
+  </div>
+  <div class="group">
+    <div class="group-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM17 6h3a3 3 0 01-3 4M7 6H4a3 3 0 003 4"/></svg>竞赛工具</div>
+    <nav class="menu" id="menu2"></nav>
+  </div>
+  <div class="ver"><div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/></svg></div>
+    <dl><dt>助理版本</dt><dd>v1.1</dd><dt>AI 状态</dt><dd id="aiState"><span class="dot off"></span>连接中</dd></dl></div>
+</aside>
+
+<main id="main"></main>
+</div>
+
+<button class="btn help" id="helpBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h7a3 3 0 013 3v12a2 2 0 00-2-2H4zM20 5h-5"/></svg>查看帮助</button>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="card"><div class="modal-h"><h2 id="mTitle"></h2><button class="btn line sm" id="mClose">关闭</button></div><div id="mBody"></div></div></div>
+
+<script>
+// ================= 图标 =================
+const I = {
+ pen:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+ fire:'<path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-3 2-4 2-7 2 1 3 3 3 5"/>',
+ box:'<path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/>',
+ cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>',
+ book:'<path d="M4 5h7a3 3 0 013 3v12a2 2 0 00-2-2H4zM20 5h-6"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+ img:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-6-6-9 9"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ send:'<path d="M3 11l18-8-8 18-2-8-8-2z"/>',
+ chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
+};
+const svg = (k,c="")=>`<svg class="${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+
+// ================= 页面定义 =================
+const PAGES = [
+ {id:"create",g:1,ic:"pen",name:"AI 写笔记/脚本",sub:"一键生成小红书图文与抖音口播，自带引流话术"},
+ {id:"analyze",g:1,ic:"fire",name:"对标爆款拆解",sub:"拆解同行爆款标题套路，仿写成你的"},
+ {id:"drafts",g:1,ic:"box",name:"待发内容",sub:"管理生成的内容，跟踪发布状态"},
+ {id:"calendar",g:1,ic:"cal",name:"内容发布计划",sub:"按竞赛节点排好全年选题"},
+ {id:"risk",g:1,ic:"shield",name:"风控检测",sub:"发布前检查导流违规词和绝对化用语"},
+ {id:"library",g:2,ic:"book",name:"竞赛资料库",sub:"主流大学生竞赛的往年节点与含金量"},
+ {id:"reply",g:2,ic:"chat",name:"私信话术助手",sub:"学生私信来了，帮你想好怎么回"}
+];
+document.getElementById("menu1").innerHTML = PAGES.filter(p=>p.g===1).map(p=>`<a href="#${p.id}" data-v="${p.id}">${svg(p.ic)}${p.name}</a>`).join("");
+document.getElementById("menu2").innerHTML = PAGES.filter(p=>p.g===2).map(p=>`<a href="#${p.id}" data-v="${p.id}">${svg(p.ic)}${p.name}</a>`).join("");
+
+// ================= 竞赛数据（往年规律，月份为大致区间） =================
+const COMPS = [
+ {id:"cxds",name:"中国国际大学生创新大赛（原“互联网+”）",cat:"创新创业",list:true,team:"3–15 人",majors:"全专业",nodes:[[3,5,"校赛"],[6,8,"省赛"],[10,11,"全国总决赛"]],sell:"高教学会榜单第 1 位，保研、评优认可度最高。",note:"2025 年起由“互联网+”大赛更名"},
+ {id:"xtz",name:"“挑战杯”中国大学生创业计划竞赛（小挑）",cat:"创新创业",list:true,team:"一般不超过 10 人",majors:"全专业",nodes:[[2,4,"校赛"],[5,6,"省赛"],[10,11,"全国终审决赛"]],sell:"与大挑隔年举办，通常在偶数年，考察商业计划书和路演。",note:"以当届通知为准"},
+ {id:"dtz",name:"“挑战杯”全国大学生课外学术科技作品竞赛（大挑）",cat:"创新创业",list:true,team:"个人或团队",majors:"全专业（含哲社调研）",nodes:[[2,4,"校赛"],[5,6,"省赛"],[10,11,"全国终审决赛"]],sell:"通常在奇数年举办，学术含量高，社会调查报告类适合文科生。",note:"以当届通知为准"},
+ {id:"fwwb",name:"中国大学生服务外包创新创业大赛",cat:"创新创业",list:true,team:"3–5 人",majors:"计算机、经管、设计",nodes:[[11,3,"报名选题"],[4,4,"作品提交"],[5,6,"区域赛"],[7,8,"总决赛"]],sell:"企业命题，能做出完整产品，适合写进简历。"},
+ {id:"sc",name:"全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）",cat:"创新创业",list:true,team:"3–5 人",majors:"电商、经管、计算机",nodes:[[3,4,"校赛"],[5,5,"省赛"],[7,7,"全国总决赛"]],sell:"门槛相对低，是商科学生拿省级奖项的常见选择。"},
+ {id:"jnjp",name:"全国大学生节能减排社会实践与科技竞赛",cat:"创新创业",list:true,team:"不超过 7 人",majors:"工科、环境、能源",nodes:[[3,5,"校内选拔"],[5,6,"作品提交"],[8,8,"全国决赛"]],sell:"作品类和社会实践调查类都可以参赛，工科生容易出成果。"},
+ {id:"gs",name:"全国大学生数学建模竞赛（国赛）",cat:"学科技能",list:true,team:"3 人",majors:"全专业（理工经管为主）",nodes:[[5,8,"培训与校赛"],[9,9,"比赛（三天三夜）"],[11,12,"公布获奖"]],sell:"参赛人数最多的竞赛之一，省奖获奖率较高，保研认可度高。"},
+ {id:"ms",name:"美国大学生数学建模竞赛（美赛 MCM/ICM）",cat:"学科技能",list:false,team:"3 人",majors:"全专业",nodes:[[12,1,"报名"],[1,2,"比赛（四天）"],[5,5,"公布结果"]],sell:"不在高教学会榜单内，但很多高校认可；英文论文，获奖面大。",note:"保研是否认可，看本校文件"},
+ {id:"ds",name:"全国大学生电子设计竞赛（电赛）",cat:"学科技能",list:true,team:"3 人",majors:"电子、自动化、通信",nodes:[[3,6,"校内培训"],[7,8,"全国赛（奇数年）/省赛（偶数年）"]],sell:"电子类含金量最高的比赛之一，四天三夜实物制作。"},
+ {id:"lqb",name:"蓝桥杯全国软件和信息技术专业人才大赛",cat:"学科技能",list:true,team:"个人",majors:"计算机、电子",nodes:[[10,12,"报名"],[4,4,"省赛"],[6,6,"国赛"]],sell:"个人赛，零基础也能备赛，省奖获奖率较高。"},
+ {id:"icpc",name:"ACM-ICPC 国际大学生程序设计竞赛",cat:"学科技能",list:true,team:"3 人",majors:"计算机",nodes:[[3,6,"校赛/邀请赛"],[9,12,"区域赛"]],sell:"算法竞赛的最高水平，区域赛奖牌对求职和保研都很有分量。"},
+ {id:"jsj",name:"中国大学生计算机设计大赛",cat:"学科技能",list:true,team:"1–5 人",majors:"全专业（含文科、设计）",nodes:[[3,4,"校赛"],[5,6,"省赛"],[7,8,"国赛"]],sell:"大类很多（软件、微课、数媒、AI 应用），文科生也能参加。"},
+ {id:"sxjs",name:"全国大学生数学竞赛",cat:"学科技能",list:true,team:"个人",majors:"数学类、非数学类分组",nodes:[[9,9,"报名"],[10,11,"预赛"],[3,4,"决赛（次年）"]],sell:"考察高数功底，非数学类专业也可以参加。"},
+ {id:"znqc",name:"全国大学生智能汽车竞赛",cat:"学科技能",list:true,team:"2–4 人",majors:"自动化、电子、计算机",nodes:[[1,2,"发布规则"],[7,8,"分赛区"],[8,8,"全国总决赛"]],sell:"备赛周期长，团队协作强，实物作品适合写进简历。"},
+ {id:"zdb",name:"全国大学生市场调查与分析大赛（正大杯）",cat:"商科语言",list:true,team:"3–5 人",majors:"经管、统计、社科",nodes:[[10,12,"报名与立项"],[3,4,"省赛"],[5,5,"国赛"]],sell:"商科、统计专业的热门榜单赛，调研报告加知识赛。"},
+ {id:"tjjm",name:"全国大学生统计建模大赛",cat:"商科语言",list:true,team:"2–5 人",majors:"统计、经济、数学",nodes:[[3,5,"校赛"],[5,6,"省赛"],[7,8,"国赛"]],sell:"偏实证分析，论文成果可以延伸成科研经历。",note:"通常两年一届，以当年通知为准"},
+ {id:"gc",name:"外研社·国才杯“理解当代中国”全国大学生外语能力大赛",cat:"商科语言",list:true,team:"个人",majors:"全专业（演讲 / 写作 / 阅读）",nodes:[[9,10,"校赛"],[10,11,"省赛"],[12,12,"全国决赛"]],sell:"外语类权威赛事，分演讲、写作、阅读三个赛项。"},
+ {id:"dgs",name:"全国大学生广告艺术大赛（大广赛）",cat:"商科语言",list:true,team:"个人或团队",majors:"广告、设计、新闻传播、营销",nodes:[[3,3,"发布命题"],[6,6,"作品提交"],[10,11,"全国评审"]],sell:"企业真实命题，作品形式多（平面、视频、文案、策划案）。"},
+ {id:"neccs",name:"全国大学生英语竞赛（NECCS）",cat:"商科语言",list:false,team:"个人",majors:"全专业（按 A/B/C/D 类分组）",nodes:[[3,3,"报名"],[4,4,"初赛"],[5,5,"决赛"]],sell:"参赛门槛低，适合大一大二拿“第一个奖项”。",note:"不在高教学会榜单内，认可度看学校"}
+];
+const MONTH_THEME = {1:["寒假规划 · 美赛冲刺","寒假怎么备赛；美赛最后冲刺；下学期参赛规划"],2:["开学前选赛 · 美赛收尾","新学期报哪几个比赛；美赛复盘；挑战杯选题"],3:["开学组队季 · 春季校赛","找队友和指导老师；创新大赛、计算机设计大赛校赛启动"],4:["省赛备赛 · 蓝桥杯","蓝桥杯省赛；正大杯省赛；春季省赛冲刺"],5:["省赛冲刺 · 经验分享","答辩和路演技巧；获奖经验帖；暑期备赛规划"],6:["期末 + 暑期规划","期末周怎么兼顾比赛；暑假集训安排；创新大赛省赛材料"],7:["暑期集训 · 电赛","电赛、三创赛、计算机设计大赛国赛；数模暑期培训"],8:["数模国赛备战","数模国赛最后一个月冲刺；智能车总决赛；新学年竞赛规划"],9:["新生入学 · 数模国赛","给大一新生的竞赛入门；数模国赛期间实时内容；数学竞赛报名"],10:["新学年报名季 · 含金量科普","竞赛榜单和含金量解读；蓝桥杯、正大杯报名；创新大赛国赛"],11:["国赛结果 · 获奖喜报","获奖喜报和学员案例；ICPC 区域赛；数模国赛获奖公布"],12:["年终复盘 · 美赛报名","一年竞赛复盘；美赛报名与组队；寒假备赛计划"]};
+const SENSITIVE = ["包过","保过","包奖","保奖","包拿奖","稳拿","必过","必拿","100%","百分百","代做","代写","代考","代报","枪手","内部名额","保录","包保研","微信","VX","vx","Vx","wx","WX","V信","威信","薇信","加V","加v","扣扣","QQ号","二维码","扫码","手机号","最好","最强","最权威","第一名机构","唯一","顶级","绝对"];
+
+// ================= 通用 =================
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const mRange=(a,b)=>a===b?`${a}月`:`${a}–${b}月`;
+const inMonth=(n,m)=>{const[a,b]=n;return a<=b?(m>=a&&m<=b):(m>=a||m<=b);};
+const compText=c=>`${c.name}｜类别：${c.cat}｜${c.list?"在全国普通高校大学生竞赛榜单内":"不在高教学会榜单内"}｜组队：${c.team}｜适合专业：${c.majors}｜往年节点：${c.nodes.map(n=>mRange(n[0],n[1])+n[2]).join("，")}｜特点：${c.sell}${c.note?"｜备注："+c.note:""}`;
+const compOptions=()=>["创新创业","学科技能","商科语言"].map(cat=>`<optgroup label="${cat}">${COMPS.filter(c=>c.cat===cat).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</optgroup>`).join("")+`<option value="__any">不限定（竞赛通用话题）</option>`;
+function highlight(text){let h=esc(text);const hits=new Set();SENSITIVE.slice().sort((a,b)=>b.length-a.length).forEach(w=>{const re=new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"g");if(re.test(h)){hits.add(w);h=h.replace(re,`<mark>${esc(w)}</mark>`);}});return{html:h,hits:[...hits]};}
+async function copyText(t,btn){try{await navigator.clipboard.writeText(t);btn.textContent="已复制";setTimeout(()=>btn.textContent="复制",1200);}catch(e){btn.textContent="请手动复制";}}
+function parseSections(text){const parts=[];const re=/【([^】]{1,20})】/g;let m,last=null;while((m=re.exec(text))){if(last)parts.push({title:last.t,body:text.slice(last.end,m.index).trim()});last={t:m[1],end:re.lastIndex};}if(last)parts.push({title:last.t,body:text.slice(last.end).trim()});return parts.filter(p=>p.body);}
+function checkBox(hits){return hits.length?`<div class="check bad">发现 ${hits.length} 个可能触发限流或违规的词：${hits.map(esc).join("、")}。已在下方标出，发布前请改掉。</div>`:`<div class="check good">风控检测通过：没有发现导流违规词和绝对化用语。</div>`;}
+function renderSections(el,text,withCheck=true){
+  const secs=parseSections(text);
+  if(!secs.length){const r=withCheck?highlight(text):{html:esc(text),hits:[]};el.innerHTML=(withCheck?checkBox(r.hits):"")+`<div class="stream">${r.html}</div>`;return secs;}
+  const all=new Set();let html="";
+  secs.forEach((s,i)=>{const r=withCheck?highlight(s.body):{html:esc(s.body),hits:[]};r.hits.forEach(h=>all.add(h));html+=`<div class="sec"><div class="sec-h"><span>${esc(s.title)}</span><button class="btn line sm" data-copy="${i}">复制</button></div><div class="sec-b">${r.html}</div></div>`;});
+  el.innerHTML=(withCheck?checkBox([...all]):"")+html;
+  el.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyText(secs[+b.dataset.copy].body,b));
+  return secs;
+}
+function openModal(title,html){$("#mTitle").textContent=title;$("#mBody").innerHTML=html;$("#modal").classList.add("on");}
+$("#mClose").onclick=()=>$("#modal").classList.remove("on");
+$("#modal").onclick=e=>{if(e.target.id==="modal")$("#modal").classList.remove("on");};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#modal").classList.remove("on");});
+
+// ================= 存储（本浏览器） =================
+const load=()=>{try{return JSON.parse(localStorage.getItem("jsw_drafts")||"[]");}catch(e){return[];}};
+const store=l=>{try{localStorage.setItem("jsw_drafts",JSON.stringify(l));}catch(e){}};
+async function syncDaily(){
+  try{
+    const r=await fetch("../data/drafts.json?v="+Date.now()); if(!r.ok) return;
+    const d=await r.json(); let l=load(); let del=[]; try{del=JSON.parse(localStorage.getItem("jsw_deleted")||"[]");}catch(e){}
+    const ids=new Set(l.map(x=>String(x.id))); let n=0;
+    (d.items||[]).forEach(x=>{ if(!ids.has(String(x.id))&&!del.includes(String(x.id))){ l.push({...x,daily:true,done:false}); n++; } });
+    if(n){ l.sort((a,b)=>b.time-a.time); store(l.slice(0,150)); refreshStats(); if(location.hash==="#drafts") route(); }
+  }catch(e){}
+}
+function addDraft(d){store([d,...load()].slice(0,100));refreshStats();}
+function statsFor(id){
+  const l=load(),now=new Date(),d0=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+  const w0=d0-((now.getDay()+6)%7)*864e5,m0=new Date(now.getFullYear(),now.getMonth(),1).getTime();
+  const f=t=>{const s=l.filter(x=>x.time>=t);return`${s.filter(x=>x.done).length}/${s.length}`;};
+  return[[f(d0),"今日概况"],[f(w0),"本周概况"],[f(m0),"本月概况"],[f(0),"全部概况"]];
+}
+
+// ================= AI =================
+let sample=null;
+const RULES=`平台规则（必须遵守）：
+1. 正文、标题、标签、话术中绝对不能出现：微信、VX、wx、V信、加V、QQ、二维码、手机号等任何站外联系方式或谐音。引流只用“评论区扣1/扣关键词”“私信我发你”“看主页”这类平台内动作。
+2. 不能出现“包过、保奖、稳拿、100%、保录、代做、代写、内部名额”等承诺或违规用语，不用“最、第一、唯一、顶级”等绝对化用语。
+3. 涉及赛程时间只能说“往年X月左右”，并提醒“以官方当年通知为准”，不要编造具体日期、获奖率数字或政策条文。
+4. 语气像真诚、懂行的学长学姐，不要硬广感。`;
+// 复制模式：网页里调不了 AI 时，给出完整提示词，粘贴到任意 AI 生成后再贴回来检查
+function promptMode(prompt,outEl,withCheck,onDone){
+  outEl.innerHTML=`<div class="check good">第 1 步：复制下面的提示词，粘贴到 DeepSeek、豆包、Kimi 或 Claude 里发送。</div>
+  <div class="sec"><div class="sec-h"><span>提示词</span><button class="btn sm" id="pmCopy">复制提示词</button></div><div class="sec-b" style="max-height:220px;overflow:auto;color:var(--muted)">${esc(prompt)}</div></div>
+  <div class="check good">第 2 步：把 AI 回复的全部内容粘贴到这里，点“检查并整理”。</div>
+  <textarea id="pmBack" style="min-height:160px" placeholder="把 AI 生成的结果粘贴到这里"></textarea>
+  <div class="toolbar" style="margin-top:10px"><button class="btn" id="pmGo">${svg("shield")}检查并整理</button></div><div id="pmOut"></div>`;
+  outEl.querySelector("#pmCopy").onclick=e=>copyText(prompt,e.currentTarget);
+  outEl.querySelector("#pmGo").onclick=()=>{
+    const t=outEl.querySelector("#pmBack").value.trim(); if(!t) return;
+    const secs=renderSections(outEl.querySelector("#pmOut"),t,withCheck);
+    if(onDone){onDone(t,secs);outEl.querySelector("#pmOut").insertAdjacentHTML("afterbegin",`<div class="check good">已存入“待发内容”。</div>`);}
+  };
+}
+async function runAI(prompt,outEl,{withCheck=true,onDone,stopBtn}={}){
+  if(!sample){promptMode(prompt,outEl,withCheck,onDone);return;}
+  const ctrl=new AbortController();
+  if(stopBtn){stopBtn.hidden=false;stopBtn.onclick=()=>ctrl.abort();}
+  document.querySelectorAll("[data-ai]").forEach(b=>b.disabled=true);
+  outEl.innerHTML=`<div class="stream">正在思考……</div>`;const s=outEl.querySelector(".stream");
+  try{
+    const r=await sample(prompt,{signal:ctrl.signal,onText:({text})=>{s.textContent=text;}});
+    const secs=renderSections(outEl,r.text,withCheck);onDone&&onDone(r.text,secs);
+  }catch(e){
+    if(e&&e.text)renderSections(outEl,e.text,withCheck);
+    const msg=e?.code==="rate_limited"?"请求太频繁，请稍等一分钟再试。":e?.code==="not_granted"?"没有获得调用 Claude 的授权，AI 功能不可用。":(ctrl.signal.aborted?"已停止生成。":"生成失败："+(e?.message||"请重试"));
+    outEl.insertAdjacentHTML("afterbegin",`<div class="check bad">${esc(msg)}</div>`);
+  }finally{
+    document.querySelectorAll("[data-ai]").forEach(b=>b.disabled=false);
+    if(stopBtn)stopBtn.hidden=true;
+  }
+}
+
+// ================= 页面渲染 =================
+const NOW_M=new Date().getMonth()+1;
+const EMPTY=(ic,t,p,feats=[],btn="")=>`<div class="empty"><div class="big">${svg(ic)}</div><strong>${t}</strong><p>${p}</p>${btn}${feats.length?`<div class="feats">${feats.map(f=>`<span>${svg(f[0])}${f[1]}</span>`).join("")}</div>`:""}</div>`;
+const VIEWS={
+ create(){return`<div class="notice">赛程按往年规律整理，每年会有调整。发布前请核对竞赛官网或学校教务处的当年通知。</div>
+ <div class="split"><div class="card"><h2>写一篇引流内容</h2>
+  <div class="field"><label>平台</label><div class="seg" id="c-platform"><button class="tab on" data-val="xhs">小红书图文</button><button class="tab" data-val="dy">抖音口播</button></div></div>
+  <div class="field"><label for="c-comp">竞赛</label><select id="c-comp">${compOptions()}</select></div>
+  <div class="field"><label for="c-angle">内容角度</label><select id="c-angle"><option>入门科普：这个比赛是什么、值不值得参加</option><option>时间节点提醒：报名/比赛快到了</option><option>避坑指南：新手最容易犯的错</option><option>获奖经验 / 学员案例复盘</option><option>含金量对比：和同类比赛比哪个更值</option><option>组队招募：怎么找队友、怎么分工</option><option>资料包福利：免费领取备赛资料</option><option>保研加分：这个奖对保研有多大用</option></select></div>
+  <div class="field"><label for="c-aud">目标人群</label><select id="c-aud"><option>大一新生（零基础）</option><option>大二（想冲奖）</option><option>大三（为保研/求职补奖项）</option><option>不限年级</option></select></div>
+  <div class="field"><label for="c-hook">引流钩子（评论/私信领取的东西）</label><input type="text" id="c-hook" value="往届获奖作品合集 + 备赛时间表"></div>
+  <div class="field"><label for="c-extra">补充素材（可选：真实案例、数据、你的服务特色）</label><textarea id="c-extra" placeholder="例：去年带的 3 个双非团队拿了省一，其中 1 个进了国赛……"></textarea></div>
+  <div class="toolbar"><button class="btn" id="c-go" data-ai="1">${svg("pen")}生成内容</button><button class="btn line" id="c-stop" hidden>停止</button></div>
+ </div><div class="card" id="c-out">${EMPTY("img","还没有生成内容","在左侧选好竞赛和角度，点“生成内容”。生成的内容会自动进入“待发内容”。",[["img","图文笔记生成"],["clock","抖音口播脚本"],["send","引流话术自动配"],["shield","风控词自动检测"]])}</div></div>`;},
+ analyze(){return`<div class="split"><div class="card"><h2>粘贴同行爆款标题</h2>
+  <div class="field"><label for="a-titles">一行一个，越多越准</label><textarea id="a-titles" style="min-height:180px">双非逆袭！大二拿下数模国一，我只做对了这3件事
+别再瞎参加比赛了！这5个竞赛保研真的加分
+挑战杯省金是怎么来的？评委没告诉你的细节
+蓝桥杯省一 ≠ 很难，零基础2个月我是这么准备的</textarea></div>
+  <div class="field"><label for="a-comp">仿写用于哪个竞赛</label><select id="a-comp">${compOptions()}</select></div>
+  <div class="field"><label for="a-n">仿写数量</label><select id="a-n"><option>10</option><option selected>15</option><option>20</option></select></div>
+  <button class="btn" id="a-go" data-ai="1">${svg("fire")}开始拆解</button></div>
+  <div class="card" id="a-out">${EMPTY("fire","还没有拆解结果","会给出每个标题用的套路、可复用的标题公式，以及为你的竞赛仿写的新标题。",[["chart","套路逐条拆解"],["pen","标题公式总结"],["send","批量仿写标题"],["fire","延伸选题方向"]])}</div></div>`;},
+ drafts(){return`<div class="toolbar"><button class="btn" onclick="location.hash='create'">＋ 创建内容</button><span id="d-tabs"><button class="tab on" data-f="all">全部</button> <button class="tab" data-f="wait">待发布</button> <button class="tab" data-f="done">已发布</button></span></div><div id="d-list"></div>`;},
+ calendar(){return`<div class="notice">从本月开始排 12 个月。点“生成本月 4 周选题”，AI 会按竞赛节点排好每周 3 篇小红书 + 2 条抖音。</div><div class="grid" id="cal"></div><div class="card" id="cal-out" style="margin-top:18px" hidden></div>`;},
+ risk(){return`<div class="split"><div class="card"><h2>粘贴要发布的内容</h2>
+  <div class="field"><label for="r-text">标题、正文、评论区话术都可以</label><textarea id="r-text" style="min-height:220px">大二零基础也能拿数模省一！我们保奖，不过全额退款，想要资料的加V：xxx</textarea></div>
+  <div class="toolbar"><button class="btn" id="r-go">${svg("shield")}检测</button><button class="btn line" id="r-ai" data-ai="1">AI 改写成合规版本</button></div></div>
+  <div class="card" id="r-out">${EMPTY("shield","等待检测","检测导流违规词（微信、VX、二维码等）、承诺类用语（包过、保奖等）和绝对化用语（最、第一等）。",[["shield","导流词检测"],["shield","承诺用语检测"],["shield","绝对化用语"],["pen","AI 合规改写"]])}</div></div>`;},
+ library(){return`<div class="toolbar"><span id="lib-cat">${["全部","创新创业","学科技能","商科语言"].map(c=>`<button class="tab${c==="全部"?" on":""}" data-c="${c}">${c}</button>`).join(" ")}</span><input type="text" id="lib-q" placeholder="搜索竞赛名称或专业" aria-label="搜索竞赛" style="max-width:240px"></div><div class="grid" id="lib-grid"></div>`;},
+ reply(){return`<div class="split"><div class="card"><h2>学生发来的私信</h2>
+  <div class="field"><label for="p-msg">粘贴对方的原话</label><textarea id="p-msg">学长你好，我是大二会计专业的，之前没参加过比赛，现在想为保研准备一下，不知道该报什么比赛，你们这边能带吗？</textarea></div>
+  <div class="field"><label for="p-stage">当前沟通阶段</label><select id="p-stage"><option>首次咨询（建立信任）</option><option>询问价格 / 服务内容</option><option>犹豫、觉得贵</option><option>已领资料，长时间没回复（激活）</option><option>已报名学员，要转介绍</option></select></div>
+  <div class="field"><label for="p-svc">你的服务介绍（可选）</label><textarea id="p-svc" style="min-height:80px" placeholder="例：竞赛 1 对 1 规划 + 全程带赛，主做创新大赛、挑战杯、正大杯……"></textarea></div>
+  <button class="btn" id="p-go" data-ai="1">${svg("chat")}生成回复</button></div>
+  <div class="card" id="p-out">${EMPTY("chat","还没有生成回复","AI 会给 3 种回复：先建立信任的、直接推进的、留钩子的，你挑一个顺手改改就能发。",[["chat","3 种回复风格"],["send","下一步推进建议"],["shield","不夸大不承诺"],["clock","跟进时间建议"]])}</div></div>`;}
+};
+
+// ================= 页面逻辑 =================
+const INIT={
+ create(){
+  let platform="xhs";
+  $("#c-platform").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{$("#c-platform").querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");platform=b.dataset.val;});
+  if(window._pickComp){$("#c-comp").value=window._pickComp;window._pickComp=null;}
+  $("#c-go").onclick=()=>{
+   const comp=COMPS.find(c=>c.id===$("#c-comp").value);
+   const format=platform==="xhs"?`输出格式（严格用这些【】小标题，按顺序）：
+【标题备选】5 个小红书标题，每个不超过 20 字，可带 1 个 emoji，用数字、反差、身份代入等手法
+【封面文字】3 组封面大字方案，每组主标题不超过 10 字加一行副标题
+【正文】600 字左右，分段清晰，适度用 emoji 做小标题，口语化，结尾自然引导到钩子
+【话题标签】8–10 个 #标签，混合大词和长尾词
+【评论区置顶】1 条引导评论或扣关键词领取的置顶评论
+【私信回复话术】有人私信要资料时的回复 2 条：先给价值，再自然引导到进一步沟通；不能出现任何站外联系方式`:`输出格式（严格用这些【】小标题，按顺序）：
+【视频标题】3 个抖音标题，每个不超过 25 字
+【前3秒钩子】3 种开场白，制造悬念或戳中痛点
+【口播脚本】60–90 秒完整口播稿，按“镜头1/镜头2…”分段，每段标注画面建议和字幕重点
+【评论区置顶】1 条引导评论或扣关键词的置顶评论
+【私信回复话术】有人私信要资料时的回复 2 条：先给价值，再引导进一步沟通；不能出现任何站外联系方式
+【话题标签】5–8 个`;
+   const prompt=`你是专注大学生竞赛辅导的内容运营专家，帮我写一篇${platform==="xhs"?"小红书图文笔记":"抖音口播视频"}，目标是涨粉，并让精准用户主动私信或评论领取资料。
+
+竞赛信息：${comp?compText(comp):"不限定具体竞赛，写大学生竞赛的通用话题。"}
+内容角度：${$("#c-angle").value}
+目标人群：${$("#c-aud").value}
+引流钩子（用户评论或私信可领取）：${$("#c-hook").value||"备赛资料包"}
+补充素材：${$("#c-extra").value.trim()||"无。不要编造具体学员姓名、学校和获奖数据，用“有同学”这类泛化说法"}
+
+${RULES}
+
+${format}
+
+只输出上述内容，不要输出其他说明。`;
+   runAI(prompt,$("#c-out"),{stopBtn:$("#c-stop"),onDone:(text,secs)=>{
+    const title=(secs&&secs[0]?secs[0].body.split("\n")[0]:text.slice(0,24)).replace(/^[\d.、\s-]+/,"").slice(0,30);
+    addDraft({id:Date.now(),title,platform,comp:comp?comp.name:"通用",text,time:Date.now(),done:false});
+   }});
+  };
+ },
+ analyze(){
+  $("#a-go").onclick=()=>{
+   const t=$("#a-titles").value.trim();if(!t){$("#a-out").innerHTML=`<div class="check bad">请先粘贴至少一个爆款标题。</div>`;return;}
+   const comp=COMPS.find(c=>c.id===$("#a-comp").value);
+   runAI(`你是小红书和抖音的爆款标题分析师，服务于一个大学生竞赛辅导账号。
+
+同行爆款标题：
+${t}
+
+请输出（严格使用这些【】小标题）：
+【逐条拆解】每个标题一段：用了什么套路（身份代入、反差、数字、悬念、痛点、权威背书等），击中了学生的什么心理
+【可复用公式】总结 4–6 个标题公式，每个给出“公式 + 示例”
+【仿写标题】为“${comp?comp.name:"大学生竞赛（通用）"}”仿写 ${$("#a-n").value} 个新标题，覆盖不同公式，每个不超过 20 字，标注用了哪个公式
+【选题延伸】基于这些爆款，再给 5 个值得做的选题方向
+
+${RULES}
+只输出上述内容。`,$("#a-out"));
+  };
+ },
+ drafts(){
+  let f="all";
+  const draw=()=>{
+   const all=load(),l=all.filter(d=>f==="all"||(f==="done"?d.done:!d.done));
+   if(!l.length){$("#d-list").innerHTML=EMPTY("img",f==="done"?"还没有已发布的内容":"还没有待发内容","去“AI 写笔记/脚本”生成第一篇内容，生成后会自动出现在这里。发布到平台后，回来点“标记已发布”，页头会统计你的发布进度。",[["img","图文混合发布"],["clock","定时选题计划"],["send","一键复制发布"],["chart","发布数据统计"]],`<button class="btn" onclick="location.hash='create'">＋ 创建内容</button>`);return;}
+   $("#d-list").innerHTML=`<div class="rows">${l.map(d=>`<div class="rowc${d.done?" done":""}"><div class="ic ${d.platform}">${d.platform==="xhs"?"小红书":"抖音"}</div>
+    <div><h4>${esc(d.title||"未命名")}</h4><div class="meta"><span class="pill ${d.done?"ok":"wait"}">${d.done?"已发布":"待发布"}</span>${d.daily?'<span class="pill ok">每日 AI 稿</span>':""}<span class="pill">${esc(d.comp)}</span><span class="pill">${new Date(d.time).toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}</span><span class="pill">风控词 ${highlight(d.text).hits.length}</span></div></div>
+    <div class="acts"><button class="btn line sm" data-view="${d.id}">查看</button><button class="btn sm ${d.done?"line":"green"}" data-done="${d.id}">${d.done?"改回待发布":"标记已发布"}</button><button class="btn sm red" data-del="${d.id}">删除</button></div></div>`).join("")}</div>`;
+   $("#d-list").querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{const d=load().find(x=>x.id==b.dataset.view);openModal(d.title||"内容详情","<div id='mv'></div>");renderSections($("#mv"),d.text,true);});
+   $("#d-list").querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>{const l2=load();const d=l2.find(x=>x.id==b.dataset.done);d.done=!d.done;store(l2);refreshStats();draw();});
+   $("#d-list").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(b.dataset.sure){try{const dl=JSON.parse(localStorage.getItem("jsw_deleted")||"[]");dl.push(String(b.dataset.del));localStorage.setItem("jsw_deleted",JSON.stringify(dl.slice(-500)));}catch(e){}store(load().filter(x=>x.id!=b.dataset.del));refreshStats();draw();}else{b.dataset.sure=1;b.textContent="再点确认";}});
+  };
+  $("#d-tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{f=b.dataset.f;$("#d-tabs").querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));draw();});
+  draw();
+ },
+ calendar(){
+  const order=[...Array(12)].map((_,i)=>((NOW_M-1+i)%12)+1);
+  $("#cal").innerHTML=order.map(m=>{const evs=[];COMPS.forEach(c=>c.nodes.forEach(n=>{if(inMonth(n,m))evs.push(`<li>${esc(c.name.replace(/（.*?）/g,"").replace(/^全国大学生|^中国大学生/,""))} · ${esc(n[2])}</li>`);}));
+   return`<div class="card mon${m===NOW_M?" now":""}"><div class="mon-h"><strong>${m} 月</strong>${m===NOW_M?'<span class="pill wait">本月</span>':""}</div><b>${MONTH_THEME[m][0]}</b><p style="margin:0;font-size:12px;color:var(--muted)">${MONTH_THEME[m][1]}</p><ul>${evs.slice(0,6).join("")}${evs.length>6?`<li>另有 ${evs.length-6} 个节点</li>`:""}</ul><button class="btn sm" data-ai="1" data-m="${m}" >生成本月 4 周选题</button></div>`;}).join("");
+  $("#cal").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{
+   const m=+b.dataset.m,evs=COMPS.filter(c=>c.nodes.some(n=>inMonth(n,m))).map(c=>"- "+compText(c)).join("\n");
+   const out=$("#cal-out");out.hidden=false;out.scrollIntoView({behavior:"smooth",block:"start"});
+   runAI(`你是大学生竞赛辅导账号的内容策划。请为 ${m} 月做小红书加抖音的 4 周内容排期。
+
+本月学生关注点：${MONTH_THEME[m].join("；")}
+本月有节点的竞赛（往年规律）：
+${evs||"无特别节点"}
+
+要求：
+- 每周 5 条：3 条小红书、2 条抖音，用纯文本列表输出
+- 每条写清：平台｜标题｜内容角度｜引流钩子（评论或私信领什么资料）
+- 节奏：月初偏科普和提醒，月中偏干货和经验，月末偏案例和资料包转化
+
+${RULES}
+
+输出格式（严格用这些【】小标题）：
+【第1周】
+【第2周】
+【第3周】
+【第4周】
+【本月资料包】给出本月最值得做的 3 个引流资料包名称和内容清单`,out);
+  });
+ },
+ risk(){
+  const check=()=>{const t=$("#r-text").value;const r=highlight(t);$("#r-out").innerHTML=checkBox(r.hits)+`<div class="sec"><div class="sec-h"><span>检测结果</span></div><div class="sec-b">${r.html||"（空）"}</div></div>`;};
+  $("#r-go").onclick=check;
+  $("#r-ai").onclick=()=>runAI(`把下面这段要发在小红书或抖音上的大学生竞赛辅导内容，改写成合规版本：去掉所有站外联系方式和导流词、承诺类用语和绝对化用语，保留原意和吸引力，引流改成平台内动作（评论区扣关键词、私信）。
+
+原文：
+${$("#r-text").value}
+
+${RULES}
+
+输出格式：
+【合规改写】
+【修改说明】逐条列出改了什么、为什么改`,$("#r-out"));
+ },
+ library(){
+  let cat="全部";
+  const draw=()=>{const q=$("#lib-q").value.trim();const l=COMPS.filter(c=>(cat==="全部"||c.cat===cat)&&(!q||(c.name+c.majors+c.sell).includes(q)));
+   $("#lib-grid").innerHTML=l.length?l.map(c=>`<article class="card comp"><div class="meta"><span class="pill wait">${c.cat}</span>${c.list?'<span class="pill ok">高教学会榜单内</span>':'<span class="pill">非榜单</span>'}<span class="pill">${esc(c.team)}</span></div><h4>${esc(c.name)}</h4><div class="tl">${c.nodes.map(n=>`<div><b>${mRange(n[0],n[1])}</b>${esc(n[2])}</div>`).join("")}</div><p style="color:var(--ink)">${esc(c.sell)}</p><p>适合：${esc(c.majors)}${c.note?" · "+esc(c.note):""}</p><button class="btn line sm" data-use="${c.id}">用它写一篇 →</button></article>`).join(""):`<div class="empty"><strong>没有找到匹配的竞赛</strong></div>`;
+   $("#lib-grid").querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>{window._pickComp=b.dataset.use;location.hash="create";});};
+  $("#lib-cat").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=b.dataset.c;$("#lib-cat").querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));draw();});
+  $("#lib-q").oninput=draw;draw();
+ },
+ reply(){
+  $("#p-go").onclick=()=>runAI(`你是大学生竞赛辅导机构的资深顾问，学生在小红书或抖音私信了我，帮我想回复。
+
+学生原话：${$("#p-msg").value}
+当前阶段：${$("#p-stage").value}
+我的服务：${$("#p-svc").value.trim()||"大学生竞赛规划与带赛辅导"}
+
+要求：真诚、像学长学姐，不夸大、不承诺获奖或保研结果；先解决对方的问题、给出具体价值，再自然推进。平台私信里不要出现任何站外联系方式，如需进一步沟通，用“我把详细规划整理给你”“方便的话我们详细聊聊”这类说法。
+
+输出格式（严格用这些【】小标题）：
+【回复一：建立信任型】
+【回复二：直接推进型】
+【回复三：留钩子型】
+【下一步建议】对方回复后怎么接，以及多久没回复该怎么跟进`,$("#p-out"),{withCheck:true});
+ }
+};
+
+// ================= 路由 & 页头 =================
+function refreshStats(){const s=statsFor();document.querySelectorAll(".stats").forEach(el=>el.innerHTML=s.map(x=>`<div class="stat"><b>${x[0]}</b><span>${x[1]}</span></div>`).join(""));}
+function route(){
+  const id=(location.hash||"#create").slice(1),p=PAGES.find(x=>x.id===id)||PAGES[0];
+  document.querySelectorAll(".menu a").forEach(a=>a.classList.toggle("on",a.dataset.v===p.id));
+  $("#main").innerHTML=`<section class="page on"><div class="ph"><div class="ph-l"><div class="ph-ic">${svg(p.ic)}</div><div><h1>${p.name}</h1><p>${p.sub}</p></div></div><div class="stats" title="已发布 / 已生成"></div></div><div class="body">${VIEWS[p.id]()}</div></section>`;
+  refreshStats();INIT[p.id]();
+  document.querySelectorAll("[data-ai]").forEach(b=>b.disabled=false);
+}
+window.addEventListener("hashchange",route);route();syncDaily();
+
+$("#helpBtn").onclick=()=>openModal("使用帮助",`<div style="font-size:14px">
+<p><b>推荐流程：</b>内容发布计划选题 → AI 写笔记/脚本 → 风控检测 → 复制到小红书/抖音发布 → 在待发内容里标记已发布。</p>
+<p><b>页头数字：</b>格式为“已发布 / 已生成”，分别统计今日、本周、本月和全部。</p>
+<p><b>引流到微信：</b>平台对站外导流管得很严。内容里只用“评论区扣关键词”“私信领取”，有人私信后，再按平台规则在主页或私信中进一步沟通。“私信话术助手”可以帮你写回复。</p>
+<p><b>每日 AI 稿：</b>每天 9:00 前会根据当天的竞赛资讯自动写好几篇小红书草稿，打开工作台时自动进入“待发内容”，带“每日 AI 稿”标签。</p>
+<p><b>AI 生成：</b>在公开网页上调不了 AI，点“生成”会给出完整提示词，复制到 DeepSeek、豆包、Kimi 或 Claude 里生成，再把结果粘回来，工具会做风控检查并存入待发内容。</p>
+<p><b>数据保存：</b>待发内容保存在当前浏览器里，换设备或清理浏览器数据后会丢失，重要内容请及时复制保存。</p>
+<p><b>赛程数据：</b>按往年规律整理，每年会有调整，发布前请核对官方当年通知。</p></div>`);
+
+// AI 连接
+(async()=>{
+  try{sample=await window.claude?.use?.("sample");}catch(e){sample=null;}
+  $("#aiState").innerHTML=sample?'<span class="dot"></span>在线':'<span class="dot"></span>复制模式';
+  document.querySelectorAll("[data-ai]").forEach(b=>b.disabled=false);
+})();
+</script>
+</body>
+</html>
