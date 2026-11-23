@@ -1,0 +1,245 @@
+{
+  "updated": "2026-11-19",
+  "items": [
+    {
+      "id": "cicd2026",
+      "name": "中国国际大学生创新大赛（2026）",
+      "short": "国创赛",
+      "category": "创新创业",
+      "organizer": "教育部等部委与省级人民政府联合主办",
+      "cycle": "每年一届",
+      "status": "进行中",
+      "statusNote": "2026 年度赛事于 7 月至 11 月举办，报名已于 9 月 25 日截止，目前处于决赛阶段。",
+      "official": "https://cy.ncss.cn",
+      "summary": "大赛主题为“我敢闯，我会创”，是参赛规模最大的大学生创新创业赛事。参赛团队统一在全国大学生创业服务网报名，按校级初赛、省级复赛、全国总决赛逐级推进。",
+      "highlights": [
+        "报名渠道：全国大学生创业服务网（cy.ncss.cn），网站“资料下载”栏目提供学生操作手册",
+        "赛事咨询：微信公众号“全国大学生创业服务网”或“中国国际大学生创新大赛”",
+        "评审规则以全国大学生创业服务网公布的最新版本为准"
+      ],
+      "dates": [
+        { "label": "报名系统开放", "date": "2026-08-10", "verified": true },
+        { "label": "报名截止", "date": "2026-09-25", "text": "9 月 25 日 12 时", "verified": true, "deadline": true },
+        { "label": "大赛举办期间", "date": null, "text": "2026 年 7 月至 11 月", "verified": true }
+      ],
+      "sources": [
+        { "title": "教育部关于举办中国国际大学生创新大赛（2026）的通知（教高函〔2026〕26号）", "url": "https://www.eol.cn/zhengce/wenjian/202607/t20260731_2761810.shtml" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "lanqiao18",
+      "name": "第十八届蓝桥杯全国大学生软件和信息技术大赛",
+      "short": "蓝桥杯",
+      "category": "信息技术",
+      "organizer": "蓝桥杯全国大学生软件和信息技术大赛组委会",
+      "cycle": "每年一届",
+      "status": "报名中",
+      "statusNote": "第十八届大赛于 2026 年 10 月起开放报名，各赛项报名截止时间以大赛官网公布为准。",
+      "official": "https://dasai.lanqiao.cn",
+      "summary": "大赛面向具有正式全日制学籍的研究生、本科生及高职高专学生，设软件赛、电子赛、人工智能赛、视觉艺术设计赛、数字科技创新赛、专项赛六大赛项，采用校赛、省赛/全国选拔赛、全国总决赛三级赛制。",
+      "highlights": [
+        "人工智能赛设 AI 模型应用开发、智能体开发、数据分析与可视化三个方向，其中 AI 模型应用开发为本届新增",
+        "参赛学生须通过大赛官网（dasai.lanqiao.cn）在线报名"
+      ],
+      "dates": [
+        { "label": "报名开放", "date": "2026-10-08", "verified": true },
+        { "label": "报名截止", "date": null, "text": "以大赛官网公布为准", "verified": false, "deadline": true },
+        { "label": "省赛 / 全国选拔赛", "date": "2027-04-01", "text": "预计 2027 年 4 月", "verified": true, "approx": true },
+        { "label": "全国总决赛", "date": "2027-06-10", "text": "预计 2027 年 6 月中上旬", "verified": true, "approx": true }
+      ],
+      "sources": [
+        { "title": "第十八届蓝桥杯大赛六大赛项报名启动，AI赛道全新上线（新华网）", "url": "https://www.news.cn/digital/20261010/bdd855071e0c4ab2ae3586fdadf4ab42/c.html" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "mcm2027",
+      "name": "2027 年美国（国际）大学生数学建模竞赛（MCM/ICM）",
+      "short": "美赛",
+      "category": "数学建模",
+      "organizer": "美国数学及其应用联合会（COMAP）",
+      "cycle": "每年一届",
+      "status": "即将开始",
+      "statusNote": "2027 年赛事将于北京时间 1 月 29 日上午开赛，报名同日截止。",
+      "official": "https://contest.comap.com/undergraduate/contests/",
+      "summary": "竞赛以团队形式进行，每队不超过 3 人，从 A–F 六道开放性赛题中任选一题，在规定时间内提交一份 PDF 格式的解决方案。",
+      "highlights": [
+        "MCM 设 A（连续）、B（离散）、C（数据洞察）三题；ICM 设 D（运筹与网络科学）、E（可持续发展）、F（政策）三题",
+        "官方时间为美国东部时间，北京时间比美东时间早 13 小时，下列时间已换算为北京时间"
+      ],
+      "dates": [
+        { "label": "报名截止", "date": "2027-01-29", "text": "北京时间 1 月 29 日 4:00", "verified": true, "deadline": true },
+        { "label": "赛题发布", "date": "2027-01-29", "text": "北京时间 1 月 29 日 6:00", "verified": true },
+        { "label": "竞赛结束", "date": "2027-02-02", "text": "北京时间 2 月 2 日 9:00", "verified": true }
+      ],
+      "sources": [
+        { "title": "COMAP MCM/ICM 官方页面", "url": "https://contest.comap.com/undergraduate/contests/" },
+        { "title": "MCM/ICM 2027 赛程整理（Borderless）", "url": "https://borderless.so/extracurricular-programs/comap/mcm-icm" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "tiaozhan-dt-20",
+      "name": "第二十届“挑战杯”全国大学生课外学术科技作品竞赛",
+      "short": "大挑",
+      "category": "学术科技",
+      "organizer": "共青团中央、中国科协、教育部、中国社会科学院、全国学联",
+      "cycle": "两年一届（奇数年举办）",
+      "status": "校内选拔",
+      "statusNote": "全国竞赛将于 2027 年举办，目前多所高校已开展校内选拔，全国赛正式通知以主办方发布为准。",
+      "official": "https://www.tiaozhanbei.net",
+      "summary": "“挑战杯”系列竞赛包括课外学术科技作品竞赛（“大挑”）和中国大学生创业计划竞赛（“小挑”），两项赛事交叉轮流开展。“大挑”主体赛分为自然科学类学术论文、哲学社会科学类社会调查报告、科技发明制作三类。",
+      "highlights": [
+        "“大挑”奇数年举办，“小挑”偶数年举办",
+        "参赛作品须经学校选拔推荐，请关注本校团委发布的校内选拔通知"
+      ],
+      "dates": [
+        { "label": "校内选拔", "date": null, "text": "各高校自行安排，请以本校通知为准", "verified": true },
+        { "label": "全国竞赛", "date": null, "text": "2027 年举办，具体时间待主办方通知", "verified": false }
+      ],
+      "sources": [
+        { "title": "挑战杯竞赛介绍（澎湃新闻·政务）", "url": "https://www.thepaper.cn/newsDetail_forward_32668196" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "zhengda17",
+      "name": "“正大杯”第十七届全国大学生市场调查与分析大赛",
+      "short": "正大杯",
+      "category": "经管统计",
+      "organizer": "中国商业统计学会",
+      "cycle": "每年一届",
+      "status": "待核实",
+      "statusNote": "第十七届通知请以中国商业统计学会官网为准。往届于 9 月下旬启动，知识赛在 11 月举行。",
+      "official": "http://www.china-cssc.org",
+      "summary": "大赛设知识赛（个人赛，在线考试）和实践赛（团队赛，3–5 人）两个环节，实践赛包含校赛、企业命题赛、省赛和全国总决赛。全日制在校专科生、本科生、研究生及在华留学生均可报名，专业不限。",
+      "highlights": [
+        "报名以学校为单位统一组织：院校先报名获取参赛代码，学生再在线报名并缴费",
+        "第十六届参考：2025 年 9 月 27 日启动，本科组知识赛 2025 年 11 月 1 日至 20 日"
+      ],
+      "dates": [
+        { "label": "大赛启动", "date": null, "text": "往届为 9 月下旬（以官网为准）", "verified": false },
+        { "label": "知识赛", "date": null, "text": "往届为 11 月（以官网为准）", "verified": false }
+      ],
+      "sources": [
+        { "title": "关于“正大杯”第十六届全国大学生市场调查与分析大赛的通知（中商统〔2025〕27号）", "url": "https://cxcyxy.hnust.edu.cn/docs/2025-10/8b52ada951004183bd518a643603ff99.pdf" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "nengjing13",
+      "name": "第十三届全国大学生能源经济学术创意大赛",
+      "short": "能经大赛",
+      "category": "经管统计",
+      "organizer": "中国优选法统筹法与经济数学研究会",
+      "cycle": "每年一届",
+      "status": "待核实",
+      "statusNote": "第十三届报名时间请以大赛官网为准。往届报名一般在 10 月中旬至 11 月中旬。",
+      "official": "http://energy.qibebt.ac.cn/eneco/contribution/",
+      "summary": "大赛面向普通高等学校在校大学生和研究生，采用校赛、区域赛、全国赛三级赛制，作品类型包括研究论文类、调研报告类等。大赛官网为唯一报名和作品提交渠道。",
+      "highlights": [
+        "第十二届总决赛于 2026 年 6 月在安徽财经大学举行，共 805 所院校报名",
+        "第十二届参考：报名 2025 年 10 月 13 日至 11 月 16 日"
+      ],
+      "dates": [
+        { "label": "报名", "date": null, "text": "往届为 10 月中旬至 11 月中旬（以官网为准）", "verified": false, "deadline": true },
+        { "label": "作品提交", "date": null, "text": "往届为次年 2 月下旬至 3 月上旬", "verified": false }
+      ],
+      "sources": [
+        { "title": "第十二届全国大学生能源经济学术创意大赛总决赛落幕（澎湃新闻）", "url": "https://m.thepaper.cn/newsDetail_forward_33422003" },
+        { "title": "大赛官网", "url": "http://energy.qibebt.ac.cn/eneco/contribution/" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "digix",
+      "name": "全球校园人工智能算法精英大赛",
+      "short": "算法精英大赛",
+      "category": "信息技术",
+      "organizer": "江苏省人工智能学会",
+      "cycle": "每年一届",
+      "status": "待核实",
+      "statusNote": "本届赛程请以大赛官网发布的通知为准。",
+      "official": "https://www.digix.org.cn",
+      "summary": "大赛面向全球具有正式学籍的全日制高等院校在校学生，主题为“智青春·算未来”，2023 年起列入全国普通高校大学生竞赛目录。",
+      "highlights": [
+        "大赛设省赛（区域赛）与国赛，具体赛道和赛题以官网为准"
+      ],
+      "dates": [
+        { "label": "本届赛程", "date": null, "text": "以官网通知为准", "verified": false }
+      ],
+      "sources": [
+        { "title": "关于举办第六届全球校园人工智能算法精英大赛的通知（第一轮）", "url": "https://cup.edu.cn/cupai/docs/2024-09/f1fbe9f2df9645dd967476dc10b5f815.pdf" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "tjjm2027",
+      "name": "2027 年全国大学生统计建模大赛",
+      "short": "统计建模",
+      "category": "数学建模",
+      "organizer": "中国统计教育学会",
+      "cycle": "每年一届",
+      "status": "待通知",
+      "statusNote": "2027 年通知尚未发布。2026 年（第十二届）于 3 月启动。",
+      "official": "http://tjjmds.ai-learning.net",
+      "summary": "大赛设本科生组和研究生组，参赛队围绕年度主题自拟题目撰写论文，全日制在校本科生、研究生均可报名，专业不限。",
+      "highlights": [
+        "本科生和研究生须分别组队，不可跨组别",
+        "2026 年主题为“服务国家战略 创新统计赋能”"
+      ],
+      "dates": [
+        { "label": "大赛启动", "date": null, "text": "往届为 3 月（以官方通知为准）", "verified": false }
+      ],
+      "sources": [
+        { "title": "2026 年全国大学生统计建模大赛报名通知（转载中国统计教育学会通知）", "url": "https://www.zizzs.com/gk/kaoyanzhuanqu/217936.html" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "cumcm2027",
+      "name": "2027 年全国大学生数学建模竞赛",
+      "short": "数模国赛",
+      "category": "数学建模",
+      "organizer": "中国工业与应用数学学会",
+      "cycle": "每年一届",
+      "status": "待通知",
+      "statusNote": "2027 年竞赛通知尚未发布，往届于每年 9 月举行。",
+      "official": "https://www.mcm.edu.cn",
+      "summary": "竞赛以三人为一队，在规定的连续时间内完成一篇建模论文，以学校为单位统一报名。",
+      "highlights": [
+        "报名一般由学校数学建模组织统一办理，请关注本校教务处或数学学院通知"
+      ],
+      "dates": [
+        { "label": "竞赛时间", "date": null, "text": "往届为 9 月（以官方通知为准）", "verified": false }
+      ],
+      "sources": [
+        { "title": "全国大学生数学建模竞赛官网", "url": "https://www.mcm.edu.cn" }
+      ],
+      "checked": "2026-11-19"
+    },
+    {
+      "id": "fwwb18",
+      "name": "第十八届中国大学生服务外包创新创业大赛",
+      "short": "服创大赛",
+      "category": "创新创业",
+      "organizer": "中国大学生服务外包创新创业大赛组委会",
+      "cycle": "每年一届",
+      "status": "待通知",
+      "statusNote": "第十八届通知尚未发布。第十七届报名时间为 2026 年 2 月 11 日至 3 月 20 日。",
+      "official": "http://www.fwwb.org.cn",
+      "summary": "大赛紧贴服务外包、创新创业主题，以应用为导向，采取网络报名方式，不收取报名费。",
+      "highlights": [
+        "第十七届参考：2026 年 2 月至 8 月举办，入围区域赛决赛的团队按每队 500 元收取参赛费"
+      ],
+      "dates": [
+        { "label": "报名", "date": null, "text": "往届为 2 月中旬至 3 月中下旬（以官网为准）", "verified": false, "deadline": true }
+      ],
+      "sources": [
+        { "title": "关于举办“第十七届中国大学生服务外包创新创业大赛”的通知", "url": "https://talent-oss.ruijie.com.cn/0c58c5065dad4171ae28055d4b9d5125.pdf" }
+      ],
+      "checked": "2026-11-19"
+    }
+  ]
+}

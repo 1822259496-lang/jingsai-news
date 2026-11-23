@@ -1,0 +1,19 @@
+{
+  "note": "只有 authorized 为 true 的条目会在网站显示。请在取得项目团队同意后再改为 true，并隐去学校与姓名。",
+  "items": [
+    { "title": "基于机器视觉及无人机的风力发电机结构状态评估", "field": "人工智能 / 能源", "contest": "", "authorized": false },
+    { "title": "基于 IoT 技术的绿色交通管控系统", "field": "物联网 / 交通", "contest": "", "authorized": false },
+    { "title": "新型冷量回收制冰汽化器", "field": "能源动力", "contest": "", "authorized": false },
+    { "title": "荒漠化种植机器人", "field": "机器人 / 生态", "contest": "", "authorized": false },
+    { "title": "跨季节太阳能热泵供暖系统", "field": "新能源", "contest": "", "authorized": false },
+    { "title": "基于深度学习的道路数字化管养系统", "field": "人工智能 / 交通", "contest": "", "authorized": false },
+    { "title": "船舶能源智能诊断系统", "field": "智能诊断", "contest": "", "authorized": false },
+    { "title": "垂直轴双转子风能与洋流能一体式发电装置", "field": "新能源", "contest": "", "authorized": false },
+    { "title": "抗生素生产数字化解决方案", "field": "生物制药 / 数字化", "contest": "", "authorized": false },
+    { "title": "基于多源监测与神经网络的滑坡预警系统", "field": "地质灾害 / AI", "contest": "", "authorized": false },
+    { "title": "嵌入式无人配送车", "field": "嵌入式 / 物流", "contest": "", "authorized": false },
+    { "title": "高精度焊接缺陷诊断技术与系统", "field": "智能制造", "contest": "", "authorized": false },
+    { "title": "基于计算机视觉的动态手势识别", "field": "计算机视觉", "contest": "", "authorized": false },
+    { "title": "基于机器学习的高通量种子识别系统", "field": "智慧农业", "contest": "", "authorized": false }
+  ]
+}
